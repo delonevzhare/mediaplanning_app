@@ -9,7 +9,7 @@ blueprint = Blueprint('plan', __name__)
 @blueprint.route('/')
 def index():
     title = "Сервис медиапланирования"
-    return render_template('index.html', page_title=title)
+    return render_template('main.html', page_title=title)
 
 @blueprint.route('/media_plans')
 @login_required
