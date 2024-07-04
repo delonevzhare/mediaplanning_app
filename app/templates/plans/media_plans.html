@@ -19,6 +19,7 @@
             <li>У вас нет созданных медиапланов.</li>
             {% endfor %}
         </ul>
+        <a href="{{ url_for('plan.create_media_plan') }}" class="btn btn-primary">Создать новый медиаплан</a>
     </div>
 </div>
 {% endblock %}
