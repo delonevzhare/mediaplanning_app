@@ -3,6 +3,7 @@ from flask_login import login_user, logout_user, login_required, current_user
 from app.user.models import User
 from app.user.forms import LoginForm, RegistrationForm
 from app.db import db
+from sqlalchemy.exc import IntegrityError
 
 blueprint = Blueprint('user', __name__, url_prefix='/users')
 
@@ -18,9 +19,8 @@ def login():
             flash('Вы успешно вошли на сайт', 'success')
             return redirect(url_for('main.index'))
         else:
-            flash('Неправильные имя или пароль', 'danger')
-    title = "Авторизация"
-    return render_template('user/login.html', page_title=title, form=form)
+            flash('Неправильные имя или пароль', 'login_error')
+    return render_template('user/login.html', form=form)
 
 @blueprint.route('/logout')
 @login_required
@@ -65,8 +65,15 @@ def process_reg():
         new_user = User(username=form.user_name.data, email=form.email.data, role='user')
         new_user.set_password(form.password.data)
         db.session.add(new_user)
-        db.session.commit()
-        flash('Вы успешно зарегистрировались!', 'success')
-        return redirect(url_for('user.login'))
-    flash('Пожалуйста, исправьте ошибки в форме', 'danger')
-    return render_template('user/registration.html', form=form)
+        try:
+            db.session.commit()
+            flash('Вы успешно зарегистрировались!', 'success')
+            return redirect(url_for('user.login'))
+        except IntegrityError:
+            db.session.rollback()
+            flash('Произошла ошибка при регистрации. Попробуйте снова.', 'danger')
+    else:
+        for field, errors in form.errors.items():
+            for error in errors:
+                flash(f'Ошибка в поле "{getattr(form, field).label.text}": - {error}', 'danger')
+    return redirect(url_for('user.register'))
