@@ -1,24 +1,24 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="row">
-    <div class="col-8">
-        {% with messages = get_flashed_messages() %}
+<div class="row mt-4">
+    <div class="col-8 offset-2 text-center">
+        {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
-        <div class="alert alert-warning" role="alert">
-            {% for message in messages %}
-            {{ message }}<br>
+        <div>
+            {% for category, message in messages %}
+            {% if category in ['success', 'login_error'] %}
+            <div class="alert alert-{{ 'danger' if category == 'login_error' else category }}" role="alert">
+                {{ message }}
+            </div>
+            {% endif %}
             {% endfor %}
         </div>
         {% endif %}
         {% endwith %}
-        <h2>Медиапланы пользователя</h2>
-        <ul>
-            {% for plan in media_plans %}
-            <li>{{ plan.name }} - {{ plan.description }}</li>
-            {% else %}
-            <li>У вас нет созданных медиапланов.</li>
-            {% endfor %}
-        </ul>
+        <h2 class="mb-4">Добро пожаловать</h2>
+        <div class="alert alert-info" role="alert">
+            У вас {{ plan_count }} медиапланов.
+        </div>
     </div>
 </div>
 {% endblock %}

@@ -1,24 +1,27 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="row">
+<div class="row mt-4">
     <div class="col-4">
         <form action="{{ url_for('user.process_login') }}" method="POST">
             {{ form.hidden_tag() }}
-            <div class="form-group">
-                {{ form.user_name.label }}
-                {{ form.user_name() }}
+            <div class="form-group mb-3">
+                {{ form.user_name.label(class="form-label") }}
+                {{ form.user_name(class="form-control") }}
+            </div>
+            <div class="form-group mb-3">
+                {{ form.password.label(class="form-label") }}
+                {{ form.password(class="form-control") }}
+            </div>
+            <div class="form-group form-check mb-3">
+                {{ form.remember_me(class="form-check-input") }}
+                {{ form.remember_me.label(class="form-check-label") }}
             </div>
             <div class="form-group">
-                {{ form.password.label }}
-                {{ form.password() }}
+                {{ form.submit(class="btn btn-primary") }}
             </div>
-            <div class="form-group form-check">
-                {{ form.remember_me() }}
-                {{ form.remember_me.label(class_='form-check-label') }}
-            </div>
-            {{ form.submit() }}
         </form>
     </div>
     <div class="col-8">
     </div>
-    {% endblock %}
+</div>
+{% endblock %}
